@@ -12,3 +12,15 @@ def highpass_filter(
     sos = signal.butter(order, normal_cutoff, btype='high', analog=False, output='sos')
     y = signal.sosfiltfilt(sos, data)
     return y
+
+
+def notch_filter(
+        data: np.ndarray,
+        f: float,
+        fs: int,
+        q: float
+) -> np.ndarray:
+    b,a = signal.iirnotch(f, q, fs)
+    sos = signal.tf2sos(b, a)
+    y = signal.sosfiltfilt(sos, data)
+    return y
