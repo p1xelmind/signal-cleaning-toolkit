@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from signal_cleaning.filters import highpass_filter, notch_filter
+from signal_cleaning.filters import highpass_filter, notch_filter, lowpass_filter
 
 fs = 250
 duration = 2
@@ -28,10 +28,10 @@ plt.legend()
 plt.show()
 '''
 
-cutoff = 1.0
+cutoff_1 = 1.0
 order = 3
 
-filtered_signal = highpass_filter(dirty_signal, cutoff, fs, order)
+filtered_signal = highpass_filter(dirty_signal, cutoff_1, fs, order)
 
 '''
 plt.figure()
@@ -114,11 +114,31 @@ plt.show()
 
 white_noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples)
 ultra_dirty_signal = dirty_signal_2 + white_noise
+
+"""
 plt.figure()
 plt.plot(t, white_noise, label="White noise")
 plt.plot(t, ultra_dirty_signal, label="Ultra Dirty Signal")
 plt.xlabel("Time")
 plt.ylabel("Amplitude")
 plt.title("Dirty Signal")
+plt.legend()
+plt.show()
+"""
+
+cutoff_2 = 15.0
+
+step_1 = highpass_filter(ultra_dirty_signal, cutoff_1, fs, order)
+step_2 = notch_filter(step_1, f3, fs, q)
+fully_cleaned_signal = lowpass_filter(step_2, cutoff_2, fs, order)
+
+
+
+plt.figure()
+plt.plot(t, ultra_dirty_signal, label="Full dirty signal")
+plt.plot(t, fully_cleaned_signal, label="Fully cleaned signal")
+plt.xlabel("Time")
+plt.ylabel("Amplitude")
+plt.title("Signals before and after")
 plt.legend()
 plt.show()
