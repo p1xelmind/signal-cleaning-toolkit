@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from signal_cleaning.filters import highpass_filter, notch_filter, lowpass_filter
+import mne
+
 
 fs = 250
 duration = 2
@@ -132,8 +134,7 @@ step_1 = highpass_filter(ultra_dirty_signal, cutoff_1, fs, order)
 step_2 = notch_filter(step_1, f3, fs, q)
 fully_cleaned_signal = lowpass_filter(step_2, cutoff_2, fs, order)
 
-
-
+"""
 plt.figure()
 plt.plot(t, ultra_dirty_signal, label="Full dirty signal")
 plt.plot(t, fully_cleaned_signal, label="Fully cleaned signal")
@@ -142,3 +143,34 @@ plt.ylabel("Amplitude")
 plt.title("Signals before and after")
 plt.legend()
 plt.show()
+"""
+
+spectrum_clean_signal = np.fft.fft(fully_cleaned_signal)
+freqs_clean_signal = np.fft.fftfreq(len(fully_cleaned_signal), 1/fs)
+plt.figure()
+plt.plot(freqs_clean_signal, np.abs(spectrum_clean_signal))
+plt.xlim(0, 60)
+plt.xlabel("Frequence (Hz)")
+plt.ylabel("Magnitude")
+plt.title("Spectrum of fully cleaned signal")
+plt.show()
+
+
+spectrum_dirty_signal = np.fft.fft(ultra_dirty_signal)
+freqs_dirty_signal = np.fft.fftfreq(len(ultra_dirty_signal), 1/fs)
+plt.figure()
+plt.plot(freqs_dirty_signal, np.abs(spectrum_dirty_signal))
+plt.xlim(0, 60)
+plt.xlabel("Frequence (Hz)")
+plt.ylabel("Magnitude")
+plt.title("Spectrum of fully cleaned signal")
+plt.show()
+
+file_path = "S001R01.edf"
+
+raw = mne.io.read_raw_edf(file_path, preload=True)
+
+print(raw)
+print(raw.info)
+
+print(raw.ch_names)
