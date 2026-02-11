@@ -29,5 +29,12 @@ raw_filt.notch_filter(
     picks="eeg"
 )
 
+raw_filt.plot(
+    duration=5,
+    n_channels=10,
+    scalings="auto",
+    block=True
+)
+
 raw_filt.plot_psd(fmax=60)
 plt.show(block=True)
