@@ -1,5 +1,6 @@
 from scipy import signal
 import numpy as np
+import mne
 
 def highpass_filter(
         data: np.ndarray,
@@ -37,3 +38,21 @@ def lowpass_filter(
     sos = signal.butter(order, normal_cutoff, btype='low', analog=False, output='sos')
     y = signal.sosfiltfilt(sos, data)
     return y
+
+
+def filter_mne(data: mne.io.BaseRaw) -> mne.io.BaseRaw:
+    filtered = data.copy()
+
+    filtered.filter(
+        l_freq = 1.0,
+        h_freq = 40.0,
+        picks='eeg',
+        fir_design='firwin'
+    )
+
+    filtered.notch_filter(
+        freqs=50,
+        picks='eeg'
+    )
+
+    return filtered
