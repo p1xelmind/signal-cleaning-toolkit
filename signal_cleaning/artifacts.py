@@ -1,19 +1,31 @@
-import mne
-from mne.preprocessing import ICA
+import mne 
+from mne.preprocessing import ICA 
+from typing import List
 
-def apply_ica(
+def fit_ica(
         raw: mne.io.BaseRaw,
         n_components: int = 20,
         random_state: int = 42
-) -> tuple[mne.io.BaseRaw, ICA]:
-    raw_copy = raw.copy()
-
+) -> ICA:
     ica = ICA(
         n_components=n_components,
         random_state=random_state,
-        max_iter='auto'
+        max_iter="auto"
     )
 
-    ica.fit(raw_copy)
+    ica.fit(raw)
 
-    return raw_copy, ica
+    return ica
+
+
+def apply_ica(
+        raw: mne.io.BaseRaw,
+        ica: ICA,
+        exclude: List[int]
+) -> mne.io.BaseRaw:
+    raw_clean = raw.copy()
+
+    ica.exclude = exclude
+    ica.apply(raw_clean)
+
+    return raw_clean
