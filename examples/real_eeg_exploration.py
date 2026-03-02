@@ -58,10 +58,10 @@ raw_copy = apply_ica(raw_copy, ica, ica.exclude)
 
 
 # raw siganl
-#raw.plot(picks=['Fp1', 'Fp2', 'O1', 'O2'], duration=10, scalings=dict(eeg=100e-6), block=True, title='Raw EEG')
+raw.plot(picks=['Fp1', 'Fp2', 'O1', 'O2'], duration=10, scalings=dict(eeg=100e-6), block=True, title='Raw EEG')
 
 # cleaned signal (after ICA)
-#raw_copy.plot(picks=['Fp1', 'Fp2', 'O1', 'O2'], duration=10, scalings=dict(eeg=100e-6), block=True, title='Cleaned EEG')
+raw_copy.plot(picks=['Fp1', 'Fp2', 'O1', 'O2'], duration=10, scalings=dict(eeg=100e-6), block=True, title='Cleaned EEG')
 
 epochs = segment_fixed_length(raw_copy, window_length=2.0)
 print(epochs)
